@@ -111,6 +111,11 @@ io.on('connection', (socket) => {
       });
   });
 
+  socket.on('get' , (id , stpe) =>{
+    const container = docker.getContainer(id);
+    
+  })
+
   socket.on('end', () => {
       array = [];
       streams.map((stream) => {
