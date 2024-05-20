@@ -142,6 +142,38 @@ app.get('/checklab/:id' , (req , res)=>{
   console.log(log)
 })
 
+
+// test
+app.post('/checklab' , (req , res) =>{
+  
+  const container = docker.getContainer('0270f94df60e45c025c4a5a2678094b73c4fa3cd7ee1c932931c75b58c727239');
+  let cmd = {
+      'AttachStdout': true,
+      'AttachStderr': true,
+      'AttachStdin': true,
+      'Tty': true,
+      Cmd: ['apt' , 'update'],
+  };
+  container.exec(cmd, (err, exec) => {
+    let options = {
+        'Tty': true,
+        stream: true,
+        stdin: true,
+        stdout: true,
+        stderr: true,
+        // fix vim
+        hijack: true,
+    };
+
+    exec.start(options, (err, stream) => {
+        stream.on('data', (chunk) => {
+          res.json(`${chunk.toString()}`)
+        });
+    });
+});
+})
+//
+
 app.get('/console/:id', (req, res, next) => {
   res.render('terminal')
 });
